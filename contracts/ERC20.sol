@@ -98,3 +98,7 @@ contract ERC20 is IERC20 {
         uint amount
     ) internal virtual {}
 }
+
+contract ArturToken is ERC20 {
+    constructor(address shop) ERC20("ArturToken", "ART", 100, shop) {}
+}
