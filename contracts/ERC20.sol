@@ -12,19 +12,19 @@ contract ERC20 is IERC20 {
     string _name;
     string _symbol;
 
-    function name() external view returns(string memory) {
+    function name() external override view returns(string memory) {
         return _name;
     }
 
-    function symbol() external view returns(string memory) {
+    function symbol() external override view returns(string memory) {
         return _symbol;
     }
 
-    function decimals() external pure returns(uint) {
+    function decimals() external override pure returns(uint) {
         return 18; // 1 token = 1 wei
     }
 
-    function totalSupply() external view returns(uint) {
+    function totalSupply() external override view returns(uint) {
         return totalTokens;
     }
 
@@ -45,11 +45,11 @@ contract ERC20 is IERC20 {
         mint(initialSupply, shop);
     }
 
-    function balanceOf(address account) public view returns(uint) {
+    function balanceOf(address account) public override view returns(uint) {
         return balances[account];
     }
 
-    function transfer(address to, uint amount) external enoughTokens(msg.sender, amount) {
+    function transfer(address to, uint amount) external override enoughTokens(msg.sender, amount) {
         _beforeTokenTransfer(msg.sender, to, amount);
         balances[msg.sender] -= amount;
         balances[to] += amount;
@@ -69,11 +69,11 @@ contract ERC20 is IERC20 {
         totalTokens -= amount;
     }
 
-    function allowance(address _owner, address spender) public view returns(uint) {
+    function allowance(address _owner, address spender) public override view returns(uint) {
         return allowances[_owner][spender];
     }
 
-    function approve(address spender, uint amount) public {
+    function approve(address spender, uint amount) public override {
         _approve(msg.sender, spender, amount);
     }
 
@@ -82,7 +82,7 @@ contract ERC20 is IERC20 {
         emit Approve(sender, spender, amount);
     }
 
-    function transferFrom(address sender, address recipient, uint amount) public enoughTokens(sender, amount) {
+    function transferFrom(address sender, address recipient, uint amount) public override enoughTokens(sender, amount) {
         _beforeTokenTransfer(sender, recipient, amount);
         //require(allowances[sender][recipient] >= amount, "check allowance!");
         allowances[sender][recipient] -= amount; // error!
