@@ -44,4 +44,29 @@ describe("ARTShop", function () {
           .to.emit(shop, "Bought")
           .withArgs(tokenAmount, buyer.address)
     })
+
+    it("allows to sell", async function() {
+      const tx = await buyer.sendTransaction({
+        value: 3,
+        to: shop.address
+      })
+      await tx.wait()
+
+      const sellAmount = 2
+
+      const approval = await erc20.connect(buyer).approve(shop.address, sellAmount)
+
+      await approval.wait()
+
+      const sellTx = await shop.connect(buyer).sell(sellAmount)
+
+      expect(await erc20.balanceOf(buyer.address)).to.eq(1)
+
+      await expect(() => sellTx).
+        to.changeEtherBalance(shop, -sellAmount)
+
+      await expect(sellTx)
+        .to.emit(shop, "Sold")
+        .withArgs(sellAmount, buyer.address)
+    })
 })
